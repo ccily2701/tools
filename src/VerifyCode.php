@@ -11,7 +11,7 @@ class VerifyCode
 {
   private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ23456789';//随机因子
   private $code;          //验证码
-  private $codelen = 4;   //验证码长度
+  public $codelen = 4;   //验证码长度
   public  $width = 130;   //宽度
   public  $height = 50;   //高度
   private $img;           //图形资源句柄
