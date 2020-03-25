@@ -16,19 +16,37 @@ class Functions
     #   $post_data  提交内容
     #   $is_SSL     证书
     #
-    public function http_curl($url='',$post_data='',$is_SSL=0,$para=array())
+    public function http_curl($url='',$para=array())
     {
         $ch = curl_init($url);
+
 //        curl_setopt ( $ch, CURLOPT_SAFE_UPLOAD, false );
-        if(!empty($post_data))
+
+        if(!empty($para['post_data']))
         {
             curl_setopt($ch,CURLOPT_POST,1);
-            curl_setopt($ch,CURLOPT_POSTFIELDS, $post_data);
+            if(is_array($para['post_data']))
+            {
+                curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($para['post_data']));
+            }else
+            {
+                curl_setopt($ch,CURLOPT_POSTFIELDS, $para['post_data']);
+            }
         }
 
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
 
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
+
+        if(!empty($para['proxy']))
+        {
+            curl_setopt($ch,CURLOPT_PROXY,$para['proxy']);
+        }
+
+        if(!empty($para['proxyport']))
+        {
+            curl_setopt($ch,CURLOPT_PROXYPORT,$para['proxyport']);
+        }
 
         if(!empty($para['user_agent']))
         {
@@ -39,26 +57,54 @@ class Functions
             curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0');
         }
 
+        if(!empty($para['cookie']))
+        {
+            curl_setopt($ch,CURLOPT_COOKIE,$para['cookie']);
 
-        if($is_SSL and defined('SSLCERT_PATH') and defined('SSLKEY_PATH'))
+        }
+
+        if(!empty($para['Referer']))
+        {
+            curl_setopt ($ch,CURLOPT_REFERER,$para['Referer']);
+        }
+
+        if(!empty($para['SSLCERT_PATH']))
         {
             curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
-            curl_setopt($ch,CURLOPT_SSLCERT, SSLCERT_PATH);
+            curl_setopt($ch,CURLOPT_SSLCERT, $para['SSLCERT_PATH']);
+        }
+
+        if(!empty($para['SSLKEY_PATH']))
+        {
             curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-            curl_setopt($ch,CURLOPT_SSLKEY, SSLKEY_PATH);
+            curl_setopt($ch,CURLOPT_SSLKEY, $para['SSLKEY_PATH']);
+        }
+
+        if(!empty($para['HEADER']))
+        {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $para['HEADER']);
+        }
+
+        if(!empty($para['ENCODING']))
+        {
+            curl_setopt($ch, CURLOPT_ENCODING, $para['ENCODING']);
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER,0);
+        curl_setopt($ch, CURLOPT_HEADER,1);
 
 
         $result = curl_exec($ch);
 
+        $headerlen = curl_getinfo($ch,CURLINFO_HEADER_SIZE);
 
+        $arr['header']=substr($result,0,$headerlen);
+        $arr['body']=substr($result,$headerlen);
+        $arr['code'] = curl_getinfo($ch,CURLINFO_HTTP_CODE);
 
         curl_close($ch);
 
-        return $result;
+        return $arr;
 
     }
 
