@@ -40,12 +40,15 @@ class Functions
 
         if(!empty($para['proxy']))
         {
-            curl_setopt($ch,CURLOPT_PROXY,$para['proxy']);
-        }
+            curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 
-        if(!empty($para['proxyport']))
-        {
-            curl_setopt($ch,CURLOPT_PROXYPORT,$para['proxyport']);
+            if(isset($para['proxy_type']) && $para['proxy_type']=='sock5')
+            {
+                curl_setopt($ch, CURLOPT_PROXYTYPE, 5); //sock5
+            }else{
+                curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //http
+            }
+            curl_setopt($ch,CURLOPT_PROXY,$para['proxy']);
         }
 
         if(!empty($para['user_agent']))
