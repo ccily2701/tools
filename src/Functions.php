@@ -22,7 +22,7 @@ class Functions
 
 //        curl_setopt ( $ch, CURLOPT_SAFE_UPLOAD, false );
 
-        if(!empty($para['post_data']))
+        if(isset($para['post_data']))
         {
             curl_setopt($ch,CURLOPT_POST,1);
             if(is_array($para['post_data']))
@@ -38,7 +38,7 @@ class Functions
 
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,FALSE);
 
-        if(!empty($para['proxy']))
+        if(isset($para['proxy']))
         {
             curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC);
 
@@ -51,7 +51,7 @@ class Functions
             curl_setopt($ch,CURLOPT_PROXY,$para['proxy']);
         }
 
-        if(!empty($para['user_agent']))
+        if(isset($para['user_agent']))
         {
             curl_setopt($ch, CURLOPT_USERAGENT,$para['user_agent']);
 
@@ -60,35 +60,35 @@ class Functions
             curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0');
         }
 
-        if(!empty($para['cookie']))
+        if(isset($para['cookie']))
         {
             curl_setopt($ch,CURLOPT_COOKIE,$para['cookie']);
 
         }
 
-        if(!empty($para['Referer']))
+        if(isset($para['Referer']))
         {
             curl_setopt ($ch,CURLOPT_REFERER,$para['Referer']);
         }
 
-        if(!empty($para['SSLCERT_PATH']))
+        if(isset($para['SSLCERT_PATH']))
         {
             curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
             curl_setopt($ch,CURLOPT_SSLCERT, $para['SSLCERT_PATH']);
         }
 
-        if(!empty($para['SSLKEY_PATH']))
+        if(isset($para['SSLKEY_PATH']))
         {
             curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
             curl_setopt($ch,CURLOPT_SSLKEY, $para['SSLKEY_PATH']);
         }
 
-        if(!empty($para['HEADER']))
+        if(isset($para['HEADER']))
         {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $para['HEADER']);
         }
 
-        if(!empty($para['ENCODING']))
+        if(isset($para['ENCODING']))
         {
             curl_setopt($ch, CURLOPT_ENCODING, $para['ENCODING']);
         }
